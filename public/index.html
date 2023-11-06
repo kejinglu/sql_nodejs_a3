@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+
+    <title> Forms </title>
+
+</head>
+<body>
+<script type = "text/javascript">
+
+function savedata(){
+   var http = new XMLHttpRequest();
+   var url = '/addComment';
+   start_time = Date.now();
+   var params = 'book=' + document.getElementById("book").value + '&comment=' + document.getElementById("comment").value;
+
+   alert(params);
+
+   http.open('POST', url, true);
+
+   http.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+
+   http.onreadystatechange = function()
+   {
+       if(http.readyState == 4 && http.status == 200){
+             
+     document.getElementById("answer").value = http.responseText;    
+       }
+   };
+   http.send(params);
+   
+   var time = Date.now();
+   document.getElementById("book").value = "";
+   document.getElementById("comment").value = "";
+
+   console.log("Response time: " + (time - start_time) + "ms");
+   
+   
+
+};
+
+function getdata(){
+
+   var http = new XMLHttpRequest();
+   var url = '/getComments';
+   
+   http.open('GET', url, true);
+ 
+   http.onreadystatechange = function()
+   {
+       if(http.readyState == 4 && http.status == 200){
+     document.getElementById("answer").innerHTML = http.responseText;    
+       }
+   };
+
+   http.send();
+
+   setTimeout(getdata, 1000);
+
+};
+
+getdata();
+
+</script>
+ 
+   </head>
+
+      
+
+
+     
+
+  <label for="book"> Book:</label><br> <br>
+  <input id="book" type="text" name="name" value=""><br> 
+  <label for="comment"> My Comments:</label><br> <br>
+  <textarea id="comment" value="" ></textarea>
+  
+  <br>
+  <br>
+  <button  onclick="savedata()"> Send Data </button>
+  <button  onclick="getdata()"> GET Data </button>
+  <br>
+
+<div id="answer">   </div>
+ 
+</body>
+
+</html>
+
