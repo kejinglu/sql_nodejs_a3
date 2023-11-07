@@ -8,78 +8,65 @@
 </head>
 <body>
 <script type = "text/javascript">
-  //init, set up db
 
-function init(){
-   var http = new XMLHttpRequest();
-   var url = '/init';
-   http.open('GET', url, true);
-   http.send();
-};
-  var start_time = 0;
-function savedata(){
-   var http = new XMLHttpRequest();
-   var url = '/addPost';
-   start_time = Date.now();
-   var params = 'topic=' + document.getElementById("book").value + '&data=' + document.getElementById("comment").value;
+//init, set up db
+ function init(){
+    var http = new XMLHttpRequest();
+    var url = '/init';
+    http.open('GET', url, true);
+    http.send();
+ };
 
-   alert(params);
+//use async fetch for send data
+function senddata(){
+  fetch ('/addPost', {
+    method: 'POST',
+    body: new URLSearchParams({
+      book: document.getElementById("book").value,
+      comment: document.getElementById("comment").value
+    }).toString(),
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded'
+    }
+  })
+  .then(response => response.json())
+  .then(book => {
+    console.log(book);
+  })
+  .then(comment => {
+    console.log(comment)
+  })
+  .catch(error => {
+    console.error(error);
+  })
+  .then(readdata())
+  alert("Post Sent");
+  //clear off
+  document.getElementById("book").value = "";
+  document.getElementById("comment").value = "";
+  console.log("...Post Sent");
+}
 
-   http.open('POST', url, true);
+function readdata(){
+  fetch('/getPosts',{
+    method: 'GET',
+  })
+  .then(response => response.json())
+  .then(data => {
+    {document.getElementById("answer").innerHTML = 
+    JSON.stringify(data);}
+  })
+  .catch(error => {
+    console.error('Error:', error);
+  })
+  //setTimeout(readdata, 5000);
 
-   http.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
-
-   http.onreadystatechange = function()
-   {
-       if(http.readyState == 4 && http.status == 200){
-             
-     document.getElementById("answer").value = http.responseText;    
-       }
-   };
-   
-
-   var time = Date.now();
-
-
-   console.log("Response time: " + (time - start_time) + "ms");
-   http.send(params);
-   //document.getElementById("book").value = "";
-   //document.getElementById("comment").value = "";
-   
-
-};
-
-function getdata(){
-
-   var http = new XMLHttpRequest();
-   var url = '/getPosts';
-   
-   http.open('GET', url, true);
- 
-   http.onreadystatechange = function()
-   {
-       if(http.readyState == 4 && http.status == 200){
-     document.getElementById("answer").innerHTML = http.responseText;    
-       }
-   };
-
-   http.send();
-
-   setTimeout(getdata, 10000);
-
-};
+}
 init();
-getdata();
+
 
 </script>
- 
    </head>
-
-      
-
-
-     
-
   <label for="book"> Topic:</label><br> <br>
   <input id="book" type="text" name="book">
   <br>
@@ -89,15 +76,12 @@ getdata();
   <textarea id="comment" name="comment"></textarea>
   <br>
 <br>
-
-  <button  onclick="savedata()"> Send Post </button>
-  <button  onclick="getdata()"> Get Posts </button>
+  <button  onclick="senddata()"> Send Post </button>
+  <button  onclick="readdata()"> Get Posts </button>
   <br>
   <br>
-
 <div id="answer">   </div>
  
 </body>
-
 </html>
 
