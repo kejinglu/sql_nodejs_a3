@@ -8,12 +8,20 @@
 </head>
 <body>
 <script type = "text/javascript">
+  //init, set up db
 
+function init(){
+   var http = new XMLHttpRequest();
+   var url = '/init';
+   http.open('GET', url, true);
+   http.send();
+};
+  var start_time = 0;
 function savedata(){
    var http = new XMLHttpRequest();
-   var url = '/addComment';
+   var url = '/addPost';
    start_time = Date.now();
-   var params = 'book=' + document.getElementById("book").value + '&comment=' + document.getElementById("comment").value;
+   var params = 'topic=' + document.getElementById("book").value + '&data=' + document.getElementById("comment").value;
 
    alert(params);
 
@@ -28,14 +36,15 @@ function savedata(){
      document.getElementById("answer").value = http.responseText;    
        }
    };
-   http.send(params);
    
+
    var time = Date.now();
-   document.getElementById("book").value = "";
-   document.getElementById("comment").value = "";
+
 
    console.log("Response time: " + (time - start_time) + "ms");
-   
+   http.send(params);
+   //document.getElementById("book").value = "";
+   //document.getElementById("comment").value = "";
    
 
 };
@@ -43,7 +52,7 @@ function savedata(){
 function getdata(){
 
    var http = new XMLHttpRequest();
-   var url = '/getComments';
+   var url = '/getPosts';
    
    http.open('GET', url, true);
  
@@ -56,10 +65,10 @@ function getdata(){
 
    http.send();
 
-   setTimeout(getdata, 1000);
+   setTimeout(getdata, 10000);
 
 };
-
+init();
 getdata();
 
 </script>
@@ -71,15 +80,19 @@ getdata();
 
      
 
-  <label for="book"> Book:</label><br> <br>
-  <input id="book" type="text" name="name" value=""><br> 
-  <label for="comment"> My Comments:</label><br> <br>
-  <textarea id="comment" value="" ></textarea>
-  
+  <label for="book"> Topic:</label><br> <br>
+  <input id="book" type="text" name="book">
   <br>
+  <label for="comment"> Write Post:</label>
+  <br> 
   <br>
-  <button  onclick="savedata()"> Send Data </button>
-  <button  onclick="getdata()"> GET Data </button>
+  <textarea id="comment" name="comment"></textarea>
+  <br>
+<br>
+
+  <button  onclick="savedata()"> Send Post </button>
+  <button  onclick="getdata()"> Get Posts </button>
+  <br>
   <br>
 
 <div id="answer">   </div>

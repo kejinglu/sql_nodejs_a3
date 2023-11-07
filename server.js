@@ -25,16 +25,16 @@ var connection = mysql.createConnection({
 
   console.log("init");
 
-  connection.query(`CREATE DATABASE IF NOT EXISTS bookcomments`, function (error,result) {
+  connection.query(`CREATE DATABASE IF NOT EXISTS testpostdb`, function (error,result) {
  if (error) console.log(error);
 });
 
-connection.query(`USE bookcomments`, function (error, results) {
+connection.query(`USE testpostdb`, function (error, results) {
  if (error) console.log(error);
 });
 
-connection.query(`CREATE TABLE IF NOT EXISTS comments
-( id int unsigned NOT NULL auto_increment, book varchar(100) NOT NULL,
+connection.query(`CREATE TABLE IF NOT EXISTS posts
+( id int unsigned NOT NULL auto_increment, topic varchar(100) NOT NULL,
 data varchar(500) NOT NULL,
 time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 PRIMARY KEY (id)
@@ -47,22 +47,21 @@ PRIMARY KEY (id)
 
   });
 
- app.post('/addComment', (req,res) => {
+ app.post('/addPost', (req,res) => {
 
-  console.log("add Comment");
-  var book = req.body.book;
-  var data = req.body.comment;
+  console.log("add your post");
+
+  var topic = req.body.topic;
+  var data = req.body.data;
 
 
-
-
-  connection.query(`USE bookcomments`, function (error, results) {
+  connection.query(`USE testpostdb`, function (error, results) {
     if (error) console.log(error);
    });
 
 
 
-  var query = `INSERT INTO comments (book, data) VALUES ('${book}', '${data}')`;
+  var query = `INSERT INTO posts (topic, data) VALUES ('${topic}', '${data}')`;
 console.log(query);
 
    connection.query(query, function (error,result) { if(error) {console.log(error);}; });
@@ -70,11 +69,16 @@ console.log(query);
   });
 
 
- app.get('/getComments', (req,res) => { 
+ app.get('/getPosts', (req,res) => { 
 
-  connection.query(`SELECT * FROM comments`, function (error, results) {
-  if (error) console.log(error);
-  res.send(results); });
+    console.log("get your posts");
+    connection.query(`USE testpostdb`, function (error, results) {
+        if (error) console.log(error);
+         });
+
+    connection.query(`SELECT * FROM posts`, function (error, results) {
+    if (error) console.log(error);
+    res.send(results); });
  });
 
 
