@@ -25,11 +25,11 @@ var connection = mysql.createConnection({
 
   console.log("init");
 
-  connection.query(`CREATE DATABASE IF NOT EXISTS testpostdb`, function (error,result) {
+  connection.query(`CREATE DATABASE IF NOT EXISTS postdb`, function (error,result) {
  if (error) console.log(error);
 });
 
-connection.query(`USE testpostdb`, function (error, results) {
+connection.query(`USE postdb`, function (error, results) {
  if (error) console.log(error);
 });
 
@@ -62,7 +62,7 @@ PRIMARY KEY (id)
 });
 
  app.get('/getPosts', (req,res) => { 
-    connection.query(`USE testpostdb`, function (error, results) {
+    connection.query(`USE postdb`, function (error, results) {
         if (error) console.log(error);
          });
 
