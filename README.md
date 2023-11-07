@@ -1,5 +1,10 @@
 # sql_nodejs_a3
 
+this project in on Github 
+https://github.com/kejinglu/sql_nodejs_a3.git
+
+To set up:
+
 `docker compose up`
 
 `docker attach nodeapp`
